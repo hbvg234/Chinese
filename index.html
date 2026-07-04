@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>汉语 · Học Tiếng Trung HSK 1-6</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3EEE1;
+    --paper-2:#EAE2CE;
+    --paper-card:#FBF8F0;
+    --ink:#2A2420;
+    --ink-soft:#786F62;
+    --seal:#B23A2E;
+    --seal-dark:#8B2A20;
+    --seal-tint:#B23A2E1a;
+    --jade:#3E6E5C;
+    --jade-tint:#3E6E5C1a;
+    --gold:#B9903E;
+    --line:#D9CFB6;
+    --shadow: 0 6px 20px rgba(42,36,32,0.10);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 8%, #EFE6C8 0%, transparent 45%),
+      radial-gradient(circle at 90% 90%, #E6DCC0 0%, transparent 40%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro', sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+  }
+  #shell{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    padding-bottom:78px;
+  }
+  /* Header */
+  header{
+    padding:22px 20px 14px;
+    position:relative;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-seal{
+    width:46px;height:46px;flex:none;
+    border-radius:8px;
+    background:var(--seal);
+    color:#F3EEE1;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif SC',serif;
+    font-weight:700;font-size:22px;
+    box-shadow: 0 3px 0 var(--seal-dark), var(--shadow);
+    transform:rotate(-2deg);
+  }
+  .brand-text h1{
+    margin:0;
+    font-family:'Noto Serif SC',serif;
+    font-size:21px;
+    font-weight:700;
+    letter-spacing:0.5px;
+  }
+  .brand-text p{
+    margin:2px 0 0;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .stroke-accent{
+    font-family:'Ma Shan Zheng',cursive;
+    color:var(--seal);
+    font-size:15px;
+    margin-left:2px;
+  }
+
+  /* HSK level rail */
+  .level-rail{
+    display:flex;
+    gap:10px;
+    padding:4px 20px 16px;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .level-rail::-webkit-scrollbar{display:none;}
+  .level-pill{
+    flex:none;
+    width:56px;height:56px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    background:var(--paper-card);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Noto Serif SC',serif;
+    cursor:pointer;
+    transition:all .18s ease;
+    position:relative;
+  }
+  .level-pill .lv-num{font-size:17px;font-weight:700;line-height:1;}
+  .level-pill .lv-label{font-size:8.5px;letter-spacing:0.5px;color:var(--ink-soft);margin-top:2px;font-family:'Be Vietnam Pro',sans-serif;}
+  .level-pill.active{
+    border-color:var(--seal);
+    background:var(--seal);
+    color:#fff;
+    transform:translateY(-3px);
+    box-shadow:0 4px 0 var(--seal-dark);
+  }
+  .level-pill.active .lv-label{color:#F3DFDA;}
+  .level-pill .ring{
+    position:absolute;inset:-2px;
+    border-radius:50%;
+    border:2px solid transparent;
+  }
+  .level-pill.mastered-all::after{
+    content:"✓";
+    position:absolute;top:-4px;right:-4px;
+    width:18px;height:18px;border-radius:50%;
+    background:var(--jade);color:#fff;
+    font-size:11px;display:flex;align-items:center;justify-content:center;
+    border:2px solid var(--paper);
+  }
+
+  /* main */
+  main{
+    flex:1;
+    padding:6px 20px 20px;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .section-title{
+    font-family:'Noto Serif SC',serif;
+    font-weight:700;
+    font-size:16px;
+    margin:6px 0 12px;
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+  }
+  .section-title .zh{font-size:19px;color:var(--seal);}
+  .progress-line{
+    font-size:12px;color:var(--ink-soft);
+    margin-left:auto;
+    font-weight:500;
+  }
+
+  /* Flashcard view */
+  .card-stage{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:340px;
+    position:relative;
+  }
+  .flashcard{
+    width:100%;
+    max-width:340px;
+    height:290px;
+    perspective:1400px;
+    cursor:pointer;
+  }
+  .flashcard-inner{
+    position:relative;
+    width:100%;height:100%;
+    transition:transform .5s cubic-bezier(.2,.7,.3,1);
+    transform-style:preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+  .face{
+    position:absolute;inset:0;
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    border-radius:20px;
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:24px;
+    text-align:center;
+  }
+  .face.back{transform:rotateY(180deg);}
+  .face::before{
+    content:"";
+    position:absolute; inset:10px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    pointer-events:none;
+    opacity:.6;
+  }
+  .hanzi-big{
+    font-family:'Noto Serif SC',serif;
+    font-weight:700;
+    font-size:64px;
+    line-height:1;
+  }
+  .hint-tap{
+    margin-top:14px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+    letter-spacing:.3px;
+  }
+  .pinyin-big{
+    font-size:22px;
+    color:var(--seal);
+    font-weight:600;
+    margin-bottom:10px;
+  }
+  .meaning-big{
+    font-size:19px;
+    font-weight:600;
+  }
+  .hanzi-mini{
+    font-family:'Noto Serif SC',serif;
+    font-size:26px;
+    color:var(--ink-soft);
+    margin-top:14px;
+  }
+  .stamp{
+    position:absolute;
+    top:14px;right:14px;
+    width:56px;height:56px;
+    border:3px solid var(--jade);
+    color:var(--jade);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Noto Serif SC',serif;
+    font-weight:900;font-size:13px;
+    transform:rotate(-14deg) scale(0);
+    opacity:0;
+    transition:transform .35s cubic-bezier(.3,1.6,.5,1), opacity .25s;
+  }
+  .stamp.show{transform:rotate(-14deg) scale(1);opacity:.85;}
+
+  .card-controls{
+    display:flex;
+    gap:12px;
+    width:100%;
+    max-width:340px;
+    margin-top:22px;
+  }
+  .btn{
+    flex:1;
+    border:none;
+    border-radius:14px;
+    padding:14px 8px;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    cursor:pointer;
+    transition:transform .12s ease, filter .12s ease;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn-ghost{
+    background:transparent;
+    border:1.5px solid var(--ink-soft);
+    color:var(--ink-soft);
+  }
+  .btn-seal{background:var(--seal);color:#fff;box-shadow:0 3px 0 var(--seal-dark);}
+  .btn-jade{background:var(--jade);color:#fff;box-shadow:0 3px 0 #294B3F;}
+  .btn-jade.done{filter:grayscale(.3) brightness(.9);}
+
+  .dots{
+    display:flex;gap:5px;justify-content:center;margin-top:18px;flex-wrap:wrap;max-width:300px;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--line);}
+  .dot.cur{background:var(--seal);width:18px;border-radius:4px;}
+  .dot.ok{background:var(--jade);}
+
+  /* Quiz view */
+  .quiz-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    box-shadow:var(--shadow);
+    padding:26px 20px;
+    text-align:center;
+    margin-bottom:16px;
+  }
+  .quiz-score{
+    font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;
+  }
+  .quiz-hanzi{
+    font-family:'Noto Serif SC',serif;
+    font-size:52px;font-weight:700;
+  }
+  .quiz-sub{font-size:12px;color:var(--ink-soft);margin-top:6px;}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .option{
+    text-align:left;
+    padding:14px 16px;
+    border-radius:13px;
+    border:1.5px solid var(--line);
+    background:var(--paper-card);
+    font-size:15px;font-weight:500;
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .option:active{transform:scale(.98);}
+  .option.correct{background:var(--jade-tint);border-color:var(--jade);color:var(--jade);font-weight:700;}
+  .option.wrong{background:var(--seal-tint);border-color:var(--seal);color:var(--seal);font-weight:700;}
+  .option[disabled]{cursor:default;}
+  .quiz-next{margin-top:14px;}
+  .quiz-empty{text-align:center;padding:40px 10px;color:var(--ink-soft);}
+  .quiz-empty .zh-big{font-family:'Noto Serif SC',serif;font-size:40px;color:var(--seal);display:block;margin-bottom:10px;}
+
+  /* List view */
+  .search-box{
+    display:flex;align-items:center;gap:8px;
+    background:var(--paper-card);
+    border:1.5px solid var(--line);
+    border-radius:13px;
+    padding:10px 14px;
+    margin-bottom:14px;
+  }
+  .search-box input{
+    border:none;outline:none;background:transparent;
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:14.5px;flex:1;color:var(--ink);
+  }
+  .word-row{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .word-row .wh{
+    font-family:'Noto Serif SC',serif;font-size:23px;font-weight:700;
+    width:52px;flex:none;
+  }
+  .word-row .wm{flex:1;min-width:0;}
+  .word-row .wp{font-size:13px;color:var(--seal);font-weight:600;}
+  .word-row .wv{font-size:13.5px;color:var(--ink-soft);margin-top:1px;}
+  .word-row .wc{
+    flex:none;width:22px;height:22px;border-radius:50%;
+    border:1.5px solid var(--line);
+  }
+  .word-row .wc.on{background:var(--jade);border-color:var(--jade);position:relative;}
+  .word-row .wc.on::after{content:"✓";color:#fff;font-size:12px;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+
+  /* Progress view */
+  .stat-grid{display:flex;gap:10px;margin-bottom:20px;}
+  .stat-box{
+    flex:1;background:var(--paper-card);border:1px solid var(--line);
+    border-radius:14px;padding:14px 10px;text-align:center;
+  }
+  .stat-box .num{font-family:'Noto Serif SC',serif;font-size:24px;font-weight:700;color:var(--seal);}
+  .stat-box .lab{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+  .bar-row{margin-bottom:14px;}
+  .bar-row .bar-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;font-weight:600;}
+  .bar-track{height:10px;background:var(--paper-2);border-radius:6px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--seal));border-radius:6px;transition:width .5s ease;}
+
+  /* bottom nav */
+  nav.tabbar{
+    position:fixed;
+    bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;
+    background:var(--paper-card);
+    border-top:1px solid var(--line);
+    display:flex;
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom));
+    box-shadow:0 -6px 18px rgba(42,36,32,0.08);
+    z-index:20;
+  }
+  .tab-btn{
+    flex:1;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    background:none;border:none;
+    padding:6px 0;
+    color:var(--ink-soft);
+    font-family:'Be Vietnam Pro',sans-serif;
+    font-size:10.5px;font-weight:600;
+    cursor:pointer;
+  }
+  .tab-btn svg{width:21px;height:21px;}
+  .tab-btn.active{color:var(--seal);}
+  .tab-btn.active svg{stroke:var(--seal);}
+
+  .empty-note{
+    text-align:center;color:var(--ink-soft);font-size:13px;padding:30px 10px;
+  }
+  ::selection{background:var(--seal-tint);}
+</style>
+</head>
+<body>
+<div id="shell">
+  <header>
+    <div class="brand">
+      <div class="brand-seal">汉</div>
+      <div class="brand-text">
+        <h1>Học Tiếng Trung<span class="stroke-accent">墨</span></h1>
+        <p>Từ vựng HSK 1 – 6 · luyện mỗi ngày một chút</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="level-rail" id="levelRail"></div>
+
+  <main id="mainView"></main>
+
+  <nav class="tabbar">
+    <button class="tab-btn" data-tab="flash">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="M7 19h14v-10"/></svg>
+      Thẻ ghi nhớ
+    </button>
+    <button class="tab-btn" data-tab="quiz">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.2 2.4c-.9.3-1.2.9-1.2 1.8"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+      Kiểm tra
+    </button>
+    <button class="tab-btn" data-tab="list">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Từ vựng
+    </button>
+    <button class="tab-btn" data-tab="progress">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M12 19V4M20 19v-6"/></svg>
+      Tiến độ
+    </button>
+  </nav>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const VOCAB = {
+  hsk1: [
+    ["你好","nǐ hǎo","xin chào"],["谢谢","xièxie","cảm ơn"],["再见","zàijiàn","tạm biệt"],
+    ["我","wǒ","tôi"],["你","nǐ","bạn"],["他","tā","anh ấy"],
+    ["她","tā","cô ấy"],["是","shì","là"],["不","bù","không"],
+    ["也","yě","cũng"],["的","de","(trợ từ sở hữu)"],["人","rén","người"],
+    ["中国","zhōngguó","Trung Quốc"],["学生","xuésheng","học sinh"],["老师","lǎoshī","giáo viên"],
+    ["朋友","péngyou","bạn bè"],["爱","ài","yêu"],["好","hǎo","tốt"],
+    ["大","dà","to"],["小","xiǎo","nhỏ"],["多","duō","nhiều"],
+    ["少","shǎo","ít"],["高兴","gāoxìng","vui"],["忙","máng","bận"],
+    ["天气","tiānqì","thời tiết"],["今天","jīntiān","hôm nay"],["明天","míngtiān","ngày mai"],
+    ["昨天","zuótiān","hôm qua"],["现在","xiànzài","bây giờ"],["时间","shíjiān","thời gian"],
+    ["吃","chī","ăn"],["喝","hē","uống"],["米饭","mǐfàn","cơm"],
+    ["水","shuǐ","nước"],["茶","chá","trà"],["家","jiā","nhà"],
+    ["爸爸","bàba","bố"],["妈妈","māma","mẹ"],["儿子","érzi","con trai"],
+    ["女儿","nǚ'ér","con gái"],["猫","māo","mèo"],["狗","gǒu","chó"],
+    ["书","shū","sách"],["电脑","diànnǎo","máy tính"],["手机","shǒujī","điện thoại"],
+    ["学习","xuéxí","học tập"],["工作","gōngzuò","công việc"],["医院","yīyuàn","bệnh viện"],
+    ["商店","shāngdiàn","cửa hàng"],["八","bā","tám"],["杯子","bēizi","cái cốc"],
+    ["北京","Běijīng","Bắc Kinh"],["本","běn","cuốn (lượng từ)"],["不客气","bú kèqi","không có gì"],
+    ["菜","cài","rau, món ăn"],["差","chà","kém, tệ"],["长","cháng","dài"],
+    ["车","chē","xe"],["出租车","chūzūchē","tắc xi"],["打电话","dǎ diànhuà","gọi điện thoại"],
+    ["大家","dàjiā","mọi người"],["到","dào","đến"],["点","diǎn","điểm, giờ"],
+    ["电视","diànshì","truyền hình"],["电影","diànyǐng","phim điện ảnh"],["东西","dōngxi","đồ vật"],
+    ["都","dōu","đều"],["读","dú","đọc"],["对","duì","đúng"],
+    ["多少","duōshao","bao nhiêu"],["二","èr","hai"],["饭店","fàndiàn","nhà hàng, khách sạn"],
+    ["飞机","fēijī","máy bay"],["分钟","fēnzhōng","phút"],["个","gè","cái, con (lượng từ)"],
+    ["汉语","Hànyǔ","tiếng Hán"],["好吃","hǎochī","ngon"],["号","hào","số, ngày"],
+    ["和","hé","và"],["很","hěn","rất"],["后面","hòumiàn","phía sau"],
+    ["回","huí","trở về"],["会","huì","biết, sẽ"],["几","jǐ","mấy"],
+    ["叫","jiào","gọi là, tên là"],["九","jiǔ","chín"],["开","kāi","mở, lái"],
+    ["看","kàn","xem, nhìn"],["看见","kànjiàn","nhìn thấy"],["块","kuài","đồng tiền, khối"],
+    ["来","lái","đến"],["了","le","(trợ từ hoàn thành)"],["冷","lěng","lạnh"],
+    ["里","lǐ","trong"],["六","liù","sáu"],["马","mǎ","con ngựa"],
+    ["吗","ma","(trợ từ nghi vấn)"],["买","mǎi","mua"],["没关系","méi guānxi","không có gì, không sao"],
+    ["没有","méiyǒu","không có"],["名字","míngzi","tên"],["哪","nǎ","đâu, nào"],
+    ["哪儿","nǎr","đâu"],["那","nà","kia, đó"],["呢","ne","(trợ từ)"],
+    ["年","nián","năm"],["漂亮","piàoliang","xinh đẹp"],["苹果","píngguǒ","táo"],
+    ["七","qī","bảy"],["前面","qiánmiàn","phía trước"],["钱","qián","tiền"],
+    ["请","qǐng","xin, mời"],["去","qù","đi"],["热","rè","nóng"],
+    ["三","sān","ba"],["上","shàng","trên"],["上午","shàngwǔ","buổi sáng"],
+    ["谁","shéi","ai"],["什么","shénme","cái gì"],["十","shí","mười"],
+    ["时候","shíhou","lúc, khi"],["水果","shuǐguǒ","trái cây"],["睡觉","shuìjiào","ngủ"],
+    ["说","shuō","nói"],["四","sì","bốn"],["岁","suì","tuổi"],
+    ["太","tài","quá"],["听","tīng","nghe"],["同学","tóngxué","bạn học"],
+    ["喂","wèi","alô"],["我们","wǒmen","chúng tôi"],["五","wǔ","năm"],
+    ["喜欢","xǐhuan","thích"],["下","xià","dưới"],["下午","xiàwǔ","buổi chiều"],
+    ["下雨","xiàyǔ","mưa"],["先生","xiānsheng","ông, quý ông"],["想","xiǎng","muốn, nghĩ"],
+    ["小姐","xiǎojiě","cô, tiểu thư"],["些","xiē","vài, một số"],["写","xiě","viết"],
+    ["星期","xīngqī","tuần"],["学校","xuéxiào","trường học"],["一","yī","một"],
+    ["一点儿","yìdiǎnr","một chút"],["衣服","yīfu","quần áo"],["医生","yīshēng","bác sĩ"],
+    ["椅子","yǐzi","cái ghế"],["有","yǒu","có"],["月","yuè","tháng"],
+    ["在","zài","ở, tại"],["怎么","zěnme","như thế nào"],["怎么样","zěnmeyàng","thế nào"],
+    ["这","zhè","này"],["中午","zhōngwǔ","buổi trưa"],["住","zhù","ở, sống"],
+    ["桌子","zhuōzi","cái bàn"],["字","zì","chữ"],["走","zǒu","đi bộ, rời đi"],
+    ["最","zuì","nhất"],["做","zuò","làm"],["坐","zuò","ngồi"],
+    ["零","líng","số không"],["两","liǎng","hai (khi đếm)"],["电话","diànhuà","điện thoại"],
+    ["火车","huǒchē","tàu hỏa"],["电影院","diànyǐngyuàn","rạp chiếu phim"],["电子邮件","diànzǐ yóujiàn","email"]
+  ],
+  hsk2: [
+    ["快乐","kuàilè","vui vẻ"],["男","nán","nam"],["女","nǚ","nữ"],
+    ["孩子","háizi","đứa trẻ"],["已经","yǐjīng","đã"],["还","hái","vẫn"],
+    ["但是","dànshì","nhưng"],["因为","yīnwèi","bởi vì"],["所以","suǒyǐ","cho nên"],
+    ["如果","rúguǒ","nếu"],["觉得","juéde","cảm thấy"],["希望","xīwàng","hy vọng"],
+    ["知道","zhīdào","biết"],["认识","rènshi","quen biết"],["记得","jìde","nhớ"],
+    ["忘记","wàngjì","quên"],["开始","kāishǐ","bắt đầu"],["结束","jiéshù","kết thúc"],
+    ["完成","wánchéng","hoàn thành"],["准备","zhǔnbèi","chuẩn bị"],["需要","xūyào","cần"],
+    ["应该","yīnggāi","nên"],["可以","kěyǐ","có thể (cho phép)"],["能","néng","có thể (năng lực)"],
+    ["一定","yídìng","nhất định"],["非常","fēicháng","rất"],["特别","tèbié","đặc biệt"],
+    ["突然","tūrán","đột nhiên"],["一起","yìqǐ","cùng nhau"],["送","sòng","tặng, đưa"],
+    ["借","jiè","mượn"],["找","zhǎo","tìm"],["等","děng","chờ"],
+    ["帮","bāng","giúp"],["决定","juédìng","quyết định"],["选择","xuǎnzé","lựa chọn"],
+    ["跳舞","tiàowǔ","nhảy múa"],["唱歌","chànggē","hát"],["运动","yùndòng","vận động, thể thao"],
+    ["帮助","bāngzhù","giúp đỡ"],["报纸","bàozhǐ","báo chí"],["比","bǐ","so với"],
+    ["别","bié","đừng"],["宾馆","bīnguǎn","khách sạn"],["穿","chuān","mặc"],
+    ["春","chūn","xuân"],["次","cì","lần"],["从","cóng","từ"],
+    ["错","cuò","sai"],["打篮球","dǎ lánqiú","chơi bóng rổ"],["大夫","dàifu","bác sĩ"],
+    ["担心","dānxīn","lo lắng"],["得到","dédào","đạt được"],["弟弟","dìdi","em trai"],
+    ["第一","dì yī","thứ nhất"],["懂","dǒng","hiểu"],["对不起","duìbuqǐ","xin lỗi"],
+    ["房间","fángjiān","phòng"],["服务员","fúwùyuán","nhân viên phục vụ"],["高","gāo","cao"],
+    ["告诉","gàosù","cho biết, nói cho"],["哥哥","gēge","anh trai"],["给","gěi","cho"],
+    ["公共汽车","gōnggòng qìchē","xe buýt"],["公司","gōngsī","công ty"],["刚才","gāngcái","vừa nãy"],
+    ["跟","gēn","cùng, theo"],["更","gèng","càng"],["公园","gōngyuán","công viên"],
+    ["贵","guì","đắt, quý"],["过","guò","qua"],["还是","háishi","hay là, vẫn"],
+    ["害怕","hàipà","sợ hãi"],["黑","hēi","đen"],["红","hóng","đỏ"],
+    ["火车站","huǒchēzhàn","nhà ga tàu hỏa"],["机场","jīchǎng","sân bay"],["鸡蛋","jīdàn","trứng gà"],
+    ["件","jiàn","cái, việc (lượng từ)"],["教室","jiàoshì","phòng học"],["姐姐","jiějie","chị gái"],
+    ["介绍","jièshào","giới thiệu"],["进","jìn","vào"],["就","jiù","liền, chính là"],
+    ["咖啡","kāfēi","cà phê"],["考试","kǎoshì","thi cử"],["可能","kěnéng","có thể"],
+    ["课","kè","bài học, tiết học"],["快","kuài","nhanh"],["累","lèi","mệt"],
+    ["离","lí","cách (khoảng cách)"],["离开","líkāi","rời khỏi"],["路","lù","đường"],
+    ["旅游","lǜyóu","du lịch"],["卖","mài","bán"],["慢","màn","chậm"],
+    ["每","měi","mỗi"],["妹妹","mèimei","em gái"],["门","mén","cửa"],
+    ["面条","miàntiáo","mì sợi"],["您","nín","ngài (kính ngữ)"],["牛奶","niúnǎi","sữa bò"],
+    ["旁边","pángbiān","bên cạnh"],["跑步","pǎobù","chạy bộ"],["便宜","piányi","rẻ"],
+    ["票","piào","vé"],["妻子","qīzi","vợ"],["起床","qǐchuáng","thức dậy"],
+    ["千","qiān","nghìn"],["铅笔","qiānbǐ","bút chì"],["晴","qíng","trời trong, nắng"],
+    ["去年","qùnián","năm ngoái"],["让","ràng","để cho, khiến"],["日","rì","ngày"],
+    ["上班","shàngbān","đi làm"],["身体","shēntǐ","cơ thể"],["生病","shēngbìng","bị bệnh"],
+    ["生日","shēngrì","sinh nhật"],["事情","shìqing","việc, sự việc"],["瘦","shòu","gầy"],
+    ["水平","shuǐpíng","trình độ"],["说话","shuōhuà","nói chuyện"],["它","tā","nó"],
+    ["台","tái","cái, chiếc (lượng từ)"],["太阳","tàiyáng","mặt trời"],["外","wài","ngoài"],
+    ["完","wán","xong, hết"],["玩","wán","chơi"],["晚上","wǎnshang","buổi tối"],
+    ["往","wǎng","hướng, về phía"],["为什么","wèishénme","tại sao"],["问","wèn","hỏi"],
+    ["西瓜","xīguā","dưa hấu"],["洗","xǐ","rửa, giặt"],["洗澡","xǐzǎo","tắm"],
+    ["夏","xià","hạ"],["先","xiān","trước"],["香蕉","xiāngjiāo","chuối"],
+    ["笑","xiào","cười"],["新","xīn","mới"],["姓","xìng","họ, tên họ"],
+    ["休息","xiūxi","nghỉ ngơi"],["雪","xuě","tuyết"],["颜色","yánsè","màu sắc"],
+    ["眼镜","yǎnjìng","kính mắt"],["羊肉","yángròu","thịt dê"],["药","yào","thuốc"],
+    ["要","yào","muốn, cần"],["一样","yíyàng","giống nhau"],["阴","yīn","âm u"],
+    ["游泳","yóuyǒng","bơi lội"],["右边","yòubian","bên phải"],["鱼","yú","cá"],
+    ["远","yuǎn","xa"],["再","zài","lại, nữa"],["早上","zǎoshang","buổi sớm"],
+    ["丈夫","zhàngfu","chồng"],["着","zhe","(trợ từ tiếp diễn)"],["真","zhēn","thật"],
+    ["正在","zhèngzài","đang"],["自己","zìjǐ","bản thân"],["左边","zuǒbian","bên trái"],
+    ["作业","zuòyè","bài tập"],["面包","miànbāo","bánh mì"],["电梯","diàntī","thang máy"],
+    ["空调","kōngtiáo","điều hòa"],["附近","fùjìn","gần đó"],["超市","chāoshì","siêu thị"],
+    ["银行","yínháng","ngân hàng"],["护照","hùzhào","hộ chiếu"],["签证","qiānzhèng","visa"],
+    ["坏","huài","hỏng, xấu"],["刷牙","shuāyá","đánh răng"],["镜子","jìngzi","cái gương"],
+    ["毛巾","máojīn","khăn mặt"],["盘子","pánzi","cái đĩa"],["筷子","kuàizi","đôi đũa"],
+    ["勺子","sháozi","cái thìa"],["电池","diànchí","pin"],["充电","chōngdiàn","sạc điện"],
+    ["信用卡","xìnyòngkǎ","thẻ tín dụng"],["密码","mìmǎ","mật khẩu"],["地图","dìtú","bản đồ"],
+    ["方向","fāngxiàng","hướng"],["左右","zuǒyòu","khoảng, tả hữu"],["季节","jìjié","mùa"],
+    ["温度","wēndù","nhiệt độ"],["刮风","guāfēng","có gió"],["打雷","dǎléi","có sấm"],
+    ["感冒","gǎnmào","cảm cúm"],["发烧","fāshāo","sốt"],["咳嗽","késòu","ho"],
+    ["打针","dǎzhēn","chích thuốc"],["体检","tǐjiǎn","khám sức khỏe"],["加班","jiābān","làm thêm giờ"],
+    ["请假","qǐngjià","xin nghỉ phép"],["放假","fàngjià","nghỉ lễ"],["工资","gōngzī","lương"],
+    ["眼睛","yǎnjing","con mắt"]
+  ],
+  hsk3: [
+    ["环境","huánjìng","môi trường"],["关系","guānxi","quan hệ"],["经验","jīngyàn","kinh nghiệm"],
+    ["经济","jīngjì","kinh tế"],["社会","shèhuì","xã hội"],["文化","wénhuà","văn hoá"],
+    ["历史","lìshǐ","lịch sử"],["地方","dìfang","địa phương, nơi"],["城市","chéngshì","thành phố"],
+    ["乡下","xiāngxià","nông thôn"],["国家","guójiā","quốc gia"],["世界","shìjiè","thế giới"],
+    ["机会","jīhuì","cơ hội"],["办法","bànfǎ","cách làm"],["方法","fāngfǎ","phương pháp"],
+    ["问题","wèntí","vấn đề"],["答案","dá'àn","đáp án"],["检查","jiǎnchá","kiểm tra"],
+    ["解决","jiějué","giải quyết"],["发展","fāzhǎn","phát triển"],["提高","tígāo","nâng cao"],
+    ["改变","gǎibiàn","thay đổi"],["影响","yǐngxiǎng","ảnh hưởng"],["参加","cānjiā","tham gia"],
+    ["举行","jǔxíng","tổ chức (sự kiện)"],["会议","huìyì","hội nghị"],["活动","huódòng","hoạt động"],
+    ["比赛","bǐsài","cuộc thi"],["成功","chénggōng","thành công"],["失败","shībài","thất bại"],
+    ["努力","nǔlì","nỗ lực"],["坚持","jiānchí","kiên trì"],["认真","rènzhēn","nghiêm túc"],
+    ["爱好","àihào","sở thích"],["安静","ānjìng","yên tĩnh"],["把","bǎ","(giới từ đem, lấy)"],
+    ["班","bān","lớp"],["搬","bān","dọn, chuyển"],["办公室","bàngōngshì","văn phòng"],
+    ["帮忙","bāngmáng","giúp đỡ"],["包","bāo","túi, gói"],["饱","bǎo","no"],
+    ["抱","bào","ôm"],["报名","bàomíng","đăng ký"],["北方","běifāng","phương bắc"],
+    ["被","bèi","bị (bị động)"],["笨","bèn","ngốc"],["比较","bǐjiào","so sánh, tương đối"],
+    ["比如","bǐrú","ví dụ như"],["必须","bìxū","phải, cần"],["变化","biànhuà","sự biến đổi"],
+    ["表格","biǎogé","biểu mẫu"],["别人","biérén","người khác"],["冰箱","bīngxiāng","tủ lạnh"],
+    ["不但","bùdàn","không những"],["不过","búguò","nhưng, tuy nhiên"],["部分","bùfen","một phần"],
+    ["擦","cā","lau, chùi"],["猜","cāi","đoán"],["参观","cānguān","tham quan"],
+    ["餐厅","cāntīng","nhà ăn"],["厕所","cèsuǒ","nhà vệ sinh"],["差不多","chàbuduō","gần như"],
+    ["尝","cháng","nếm thử"],["长城","Chángchéng","Trường Thành"],["场","chǎng","(lượng từ buổi, trận)"],
+    ["超过","chāoguò","vượt qua"],["成绩","chéngjì","thành tích"],["成为","chéngwéi","trở thành"],
+    ["吃惊","chījīng","kinh ngạc"],["重复","chóngfù","lặp lại"],["重","zhòng","nặng"],
+    ["抽烟","chōuyān","hút thuốc"],["出差","chūchāi","đi công tác"],["出发","chūfā","xuất phát"],
+    ["出生","chūshēng","sinh ra"],["出现","chūxiàn","xuất hiện"],["厨房","chúfáng","nhà bếp"],
+    ["除了","chúle","ngoài ra"],["传真","chuánzhēn","fax"],["窗户","chuānghu","cửa sổ"],
+    ["词典","cídiǎn","từ điển"],["从来","cónglái","từ trước đến nay"],["粗心","cūxīn","cẩu thả"],
+    ["存","cún","gửi, lưu"],["打扮","dǎbàn","trang điểm"],["打扫","dǎsǎo","dọn dẹp"],
+    ["打折","dǎzhé","giảm giá"],["大概","dàgài","khoảng, đại khái"],["大使馆","dàshǐguǎn","đại sứ quán"],
+    ["大约","dàyuē","khoảng chừng"],["带","dài","mang theo, dây"],["单位","dānwèi","đơn vị"],
+    ["耽误","dānwù","trì hoãn"],["当","dāng","làm, khi"],["当时","dāngshí","lúc đó"],
+    ["刀","dāo","con dao"],["导游","dǎoyóu","hướng dẫn viên"],["到处","dàochù","khắp nơi"],
+    ["到底","dàodǐ","rốt cuộc"],["道歉","dàoqiàn","xin lỗi"],["地点","dìdiǎn","địa điểm"],
+    ["地球","dìqiú","địa cầu"],["地址","dìzhǐ","địa chỉ"],["点心","diǎnxin","điểm tâm"],
+    ["电台","diàntái","đài phát thanh"],["掉","diào","rơi, mất"],["动作","dòngzuò","động tác"],
+    ["读书","dúshū","đọc sách"],["肚子","dùzi","cái bụng"],["短","duǎn","ngắn"],
+    ["段","duàn","đoạn"],["锻炼","duànliàn","luyện tập, rèn luyện"],["队","duì","đội"],
+    ["对话","duìhuà","đối thoại"],["多么","duōme","biết bao"],["儿童","értóng","trẻ em"],
+    ["耳朵","ěrduo","tai"],["发生","fāshēng","xảy ra"],["法语","Fǎyǔ","tiếng Pháp"],
+    ["翻译","fānyì","phiên dịch"],["方便","fāngbiàn","thuận tiện"],["方面","fāngmiàn","mặt, phương diện"],
+    ["放","fàng","đặt, để"],["放心","fàngxīn","yên tâm"],["份","fèn","phần (lượng từ)"],
+    ["丰富","fēngfù","phong phú"],["否则","fǒuzé","nếu không"],["符合","fúhé","phù hợp"],
+    ["复习","fùxí","ôn tập"],["复杂","fùzá","phức tạp"],["负责","fùzé","phụ trách"],
+    ["改","gǎi","sửa"],["干杯","gānbēi","cạn ly"],["干净","gānjìng","sạch sẽ"],
+    ["敢","gǎn","dám"],["感觉","gǎnjué","cảm giác"],["感情","gǎnqíng","tình cảm"],
+    ["感谢","gǎnxiè","cảm tạ"],["赶","gǎn","vội, đuổi kịp"],["刚","gāng","vừa mới"],
+    ["高速公路","gāosù gōnglù","đường cao tốc"],["各","gè","mỗi, các"],["公里","gōnglǐ","kilômét"],
+    ["共","gòng","cùng, tổng"],["够","gòu","đủ"],["购物","gòuwù","mua sắm"],
+    ["估计","gūjì","ước tính"],["鼓励","gǔlì","khuyến khích"],["故意","gùyì","cố ý"],
+    ["顾客","gùkè","khách hàng"],["挂","guà","treo"],["关键","guānjiàn","then chốt"],
+    ["管理","guǎnlǐ","quản lý"],["逛街","guàngjiē","đi dạo phố"],["规定","guīdìng","quy định"],
+    ["国籍","guójí","quốc tịch"],["果汁","guǒzhī","nước quả"],["过去","guòqù","quá khứ"],
+    ["海洋","hǎiyáng","đại dương"],["害","hài","gây hại"],["寒假","hánjià","kỳ nghỉ đông"],
+    ["汗","hàn","mồ hôi"],["行李箱","xínglixiāng","vali"],["合适","héshì","phù hợp"],
+    ["盒子","hézi","cái hộp"],["厚","hòu","dày"],["互联网","hùliánwǎng","internet"],
+    ["互相","hùxiāng","lẫn nhau"],["护士","hùshi","y tá"],["花","huā","hoa; tiêu (tiền)"],
+    ["花园","huāyuán","vườn hoa"],["划船","huáchuán","chèo thuyền"],["欢迎","huānyíng","hoan nghênh"],
+    ["回答","huídá","trả lời"],["火","huǒ","lửa"],["或者","huòzhě","hoặc là"],
+    ["几乎","jīhū","hầu như"],["积极","jījí","tích cực"],["基础","jīchǔ","cơ sở, nền tảng"],
+    ["激动","jīdòng","xúc động"],["及时","jíshí","kịp thời"],["即使","jíshǐ","dù cho"],
+    ["急","jí","gấp, vội"],["计划","jìhuà","kế hoạch"],["记者","jìzhě","nhà báo"],
+    ["既然","jìrán","đã như vậy"],["继续","jìxù","tiếp tục"],["寄","jì","gửi (thư)"],
+    ["加油站","jiāyóuzhàn","trạm xăng"],["家具","jiājù","đồ nội thất"],["家务","jiāwù","việc nhà"],
+    ["价格","jiàgé","giá cả"],["减肥","jiǎnféi","giảm cân"],["减少","jiǎnshǎo","giảm bớt"],
+    ["简单","jiǎndān","đơn giản"],["健康","jiànkāng","sức khỏe"],["将来","jiānglái","tương lai"],
+    ["奖金","jiǎngjīn","tiền thưởng"],["降低","jiàngdī","hạ thấp"],["降落","jiàngluò","hạ cánh"],
+    ["交","jiāo","giao, nộp"],["交流","jiāoliú","giao lưu"],["交通","jiāotōng","giao thông"],
+    ["郊区","jiāoqū","ngoại ô"],["饺子","jiǎozi","bánh chẻo"],["接","jiē","đón, nhận"],
+    ["接受","jiēshòu","tiếp nhận"],["接着","jiēzhe","tiếp theo"],["街道","jiēdào","đường phố"],
+    ["节目","jiémù","tiết mục, chương trình"],["节日","jiérì","ngày lễ"],["结婚","jiéhūn","kết hôn"],
+    ["解释","jiěshì","giải thích"],["紧张","jǐnzhāng","căng thẳng"],["尽管","jǐnguǎn","mặc dù"],
+    ["精彩","jīngcǎi","đặc sắc"],["经历","jīnglì","trải qua, kinh nghiệm"],["经常","jīngcháng","thường xuyên"],
+    ["经过","jīngguò","trải qua"],["竟然","jìngrán","lại (bất ngờ)"],["究竟","jiūjìng","rốt cuộc"],
+    ["举","jǔ","nâng, giơ lên"],["拒绝","jùjué","từ chối"],["距离","jùlí","khoảng cách"],
+    ["聚会","jùhuì","buổi họp mặt"],["坚强","jiānqiáng","kiên cường"],["温暖","wēnnuǎn","ấm áp"],
+    ["自信","zìxìn","tự tin"],["幸福","xìngfú","hạnh phúc"],["浪漫","làngmàn","lãng mạn"],
+    ["礼貌","lǐmào","lễ độ, lịch sự"]
+  ],
+  hsk4: [
+    ["保护","bǎohù","bảo vệ"],["表示","biǎoshì","biểu thị"],["表演","biǎoyǎn","biểu diễn"],
+    ["表扬","biǎoyáng","khen ngợi"],["标准","biāozhǔn","tiêu chuẩn"],["竞争","jìngzhēng","cạnh tranh"],
+    ["合作","hézuò","hợp tác"],["责任","zérèn","trách nhiệm"],["态度","tàidù","thái độ"],
+    ["性格","xìnggé","tính cách"],["情况","qíngkuàng","tình huống"],["现象","xiànxiàng","hiện tượng"],
+    ["现代","xiàndài","hiện đại"],["传统","chuántǒng","truyền thống"],["材料","cáiliào","tài liệu, nguyên liệu"],
+    ["技术","jìshù","kỹ thuật"],["科学","kēxué","khoa học"],["研究","yánjiū","nghiên cứu"],
+    ["调查","diàochá","điều tra"],["结果","jiéguǒ","kết quả"],["原因","yuányīn","nguyên nhân"],
+    ["目的","mùdì","mục đích"],["意见","yìjiàn","ý kiến"],["建议","jiànyì","đề nghị"],
+    ["讨论","tǎolùn","thảo luận"],["讨厌","tǎoyàn","ghét"],["羡慕","xiànmù","ngưỡng mộ"],
+    ["骄傲","jiāo'ào","kiêu ngạo, tự hào"],["幽默","yōumò","hài hước"],["严格","yángé","nghiêm khắc"],
+    ["诚实","chéngshí","trung thực"],["爱情","àiqíng","tình yêu"],["安排","ānpái","sắp xếp"],
+    ["安全","ānquán","an toàn"],["按时","ànshí","đúng giờ"],["按照","ànzhào","theo, dựa theo"],
+    ["百分之","bǎifēnzhī","phần trăm"],["棒","bàng","tuyệt, giỏi"],["包括","bāokuò","bao gồm"],
+    ["保证","bǎozhèng","đảm bảo"],["报道","bàodào","đưa tin"],["报告","bàogào","báo cáo"],
+    ["抱歉","bàoqiàn","xin lỗi"],["悲观","bēiguān","bi quan"],["背","bèi","học thuộc, cái lưng"],
+    ["被子","bèizi","chăn"],["本来","běnlái","vốn dĩ"],["彼此","bǐcǐ","lẫn nhau"],
+    ["毕业","bìyè","tốt nghiệp"],["避免","bìmiǎn","tránh"],["编辑","biānjí","biên tập"],
+    ["遍","biàn","lần (khắp)"],["辨别","biànbié","phân biệt"],["辩论","biànlùn","tranh luận"],
+    ["标志","biāozhì","dấu hiệu, biểu tượng"],["表达","biǎodá","diễn đạt"],["表面","biǎomiàn","bề mặt"],
+    ["并且","bìngqiě","và, hơn nữa"],["博士","bóshì","tiến sĩ"],["不得不","bùdébù","không thể không"],
+    ["不管","bùguǎn","bất kể"],["不仅","bùjǐn","không chỉ"],["部门","bùmén","bộ phận"],
+    ["财产","cáichǎn","tài sản"],["采访","cǎifǎng","phỏng vấn"],["采取","cǎiqǔ","áp dụng, thực hiện"],
+    ["参考","cānkǎo","tham khảo"],["操场","cāochǎng","sân vận động"],["册","cè","cuốn (sách)"],
+    ["测验","cèyàn","trắc nghiệm"],["曾经","céngjīng","đã từng"],["差距","chājù","khoảng cách, chênh lệch"],
+    ["产品","chǎnpǐn","sản phẩm"],["产生","chǎnshēng","phát sinh"],["长期","chángqī","dài hạn"],
+    ["场合","chǎnghé","hoàn cảnh, tình huống"],["场所","chǎngsuǒ","nơi, địa điểm"],["朝","cháo","hướng, về phía"],
+    ["彻底","chèdǐ","triệt để"],["沉默","chénmò","im lặng"],["趁","chèn","nhân lúc"],
+    ["称为","chēngwéi","gọi là"],["成分","chéngfèn","thành phần"],["成立","chénglì","thành lập"],
+    ["成熟","chéngshú","chín, trưởng thành"],["成语","chéngyǔ","thành ngữ"],["诚恳","chéngkěn","chân thành"],
+    ["程度","chéngdù","mức độ"],["程序","chéngxù","trình tự, quy trình"],["承认","chéngrèn","thừa nhận"],
+    ["吃苦","chīkǔ","chịu khổ"],["充满","chōngmǎn","tràn đầy"],["宠物","chǒngwù","vật nuôi"],
+    ["出色","chūsè","xuất sắc"],["初级","chūjí","sơ cấp"],["除非","chúfēi","trừ khi"],
+    ["处理","chǔlǐ","xử lý"],["传播","chuánbō","truyền bá"],["传递","chuándì","truyền đạt"],
+    ["创造","chuàngzào","sáng tạo"],["吹","chuī","thổi"],["纯粹","chúncuì","hoàn toàn, thuần túy"],
+    ["词汇","cíhuì","từ vựng"],["辞职","cízhí","từ chức"],["此外","cǐwài","ngoài ra"],
+    ["从此","cóngcǐ","từ đó"],["从而","cóng'ér","từ đó, do đó"],["从事","cóngshì","làm việc trong lĩnh vực"],
+    ["粗糙","cūcāo","thô ráp"],["促进","cùjìn","thúc đẩy"],["存在","cúnzài","tồn tại"],
+    ["答应","dāying","đồng ý"],["达到","dádào","đạt được"],["打交道","dǎ jiāodào","giao thiệp"],
+    ["打招呼","dǎ zhāohu","chào hỏi"],["大方","dàfang","hào phóng, lịch thiệp"],["大型","dàxíng","cỡ lớn"],
+    ["代表","dàibiǎo","đại diện"],["代替","dàitì","thay thế"],["贷款","dàikuǎn","cho vay, vay tiền"],
+    ["单纯","dānchún","đơn thuần"],["单调","dāndiào","đơn điệu"],["单独","dāndú","riêng lẻ"],
+    ["担任","dānrèn","đảm nhiệm"],["导致","dǎozhì","dẫn đến"],["登记","dēngjì","đăng ký"],
+    ["等于","děngyú","bằng với"],["低","dī","thấp"],["敌人","dírén","kẻ thù"],
+    ["地道","dìdao","chính thống, đích thực"],["地理","dìlǐ","địa lý"],["地区","dìqū","khu vực"],
+    ["地位","dìwèi","địa vị"],["递","dì","đưa, chuyển"],["点头","diǎntóu","gật đầu"],
+    ["调皮","tiáopí","nghịch ngợm"],["顶","dǐng","đỉnh, đội (mũ)"],["动画","dònghuà","hoạt hình"],
+    ["独立","dúlì","độc lập"],["度过","dùguò","trải qua (thời gian)"],["短信","duǎnxìn","tin nhắn"],
+    ["断","duàn","gãy, đứt"],["堆","duī","đống, chồng"],["对比","duìbǐ","đối chiếu"],
+    ["对待","duìdài","đối xử"],["对方","duìfāng","đối phương"],["对象","duìxiàng","đối tượng"],
+    ["多亏","duōkuī","nhờ có"],["朵","duǒ","bông (hoa)"],["恶劣","èliè","xấu, tồi tệ"],
+    ["而","ér","mà, nhưng"],["发表","fābiǎo","phát biểu, công bố"],["发达","fādá","phát đạt"],
+    ["发抖","fādǒu","run rẩy"],["发挥","fāhuī","phát huy"],["发明","fāmíng","phát minh"],
+    ["发言","fāyán","phát biểu"],["罚款","fákuǎn","phạt tiền"],["翻","fān","lật, dịch"],
+    ["繁荣","fánróng","phồn vinh"],["反而","fǎn'ér","trái lại"],["反复","fǎnfù","lặp lại nhiều lần"],
+    ["反映","fǎnyìng","phản ánh"],["反应","fǎnyìng","phản ứng"],["反正","fǎnzhèng","dù sao"],
+    ["范围","fànwéi","phạm vi"],["方案","fāng'àn","phương án"],["妨碍","fáng'ài","cản trở"],
+    ["仿佛","fǎngfú","dường như"],["非","fēi","không phải"],["肥皂","féizào","xà phòng"],
+    ["废话","fèihuà","lời nói vô nghĩa"],["分别","fēnbié","chia biệt, riêng biệt"],["分布","fēnbù","phân bố"],
+    ["分配","fēnpèi","phân phối"],["分手","fēnshǒu","chia tay"],["分析","fēnxī","phân tích"],
+    ["纷纷","fēnfēn","lần lượt, ào ạt"],["奋斗","fèndòu","phấn đấu"],["风格","fēnggé","phong cách"],
+    ["风景","fēngjǐng","cảnh đẹp"],["风俗","fēngsú","phong tục"],["疯狂","fēngkuáng","điên cuồng"],
+    ["否定","fǒudìng","phủ định"],["否认","fǒurèn","phủ nhận"],["扶","fú","đỡ, nâng"],
+    ["服装","fúzhuāng","trang phục"],["幅","fú","bức (tranh)"],["福利","fúlì","phúc lợi"],
+    ["付款","fùkuǎn","thanh toán"],["妇女","fùnǔ","phụ nữ"],["富","fù","giàu"],
+    ["复制","fùzhì","sao chép"],["改革","gǎigé","cải cách"],["改进","gǎijìn","cải tiến"],
+    ["改善","gǎishàn","cải thiện"],["盖","gài","đắp, xây"],["概括","gàikuò","tổng quát"],
+    ["概念","gàiniàn","khái niệm"],["干脆","gāncuì","dứt khoát"],["干燥","gānzào","khô ráo"],
+    ["感激","gǎnjī","cảm kích"],["感想","gǎnxiǎng","cảm nghĩ"],["干活","gànhuó","làm việc"],
+    ["岗位","gǎngwèi","vị trí công tác"],["高档","gāodàng","cao cấp"],["高级","gāojí","cao cấp"],
+    ["搞","gǎo","làm, tổ chức"],["告别","gàobié","tạm biệt"],["格外","géwài","đặc biệt"],
+    ["隔壁","gébì","hàng xóm bên cạnh"],["个人","gèrén","cá nhân"],["个别","gèbié","cá biệt"],
+    ["个性","gèxìng","cá tính"],["各自","gèzì","mỗi người, mỗi thứ"],["根本","gēnběn","căn bản"],
+    ["工厂","gōngchǎng","nhà máy"],["工程师","gōngchéngshī","kỹ sư"],["工具","gōngjù","công cụ"],
+    ["公平","gōngpíng","công bằng"],["公布","gōngbù","công bố"],["公民","gōngmín","công dân"],
+    ["功能","gōngnéng","chức năng"],["恭喜","gōngxǐ","chúc mừng"],["贡献","gòngxiàn","cống hiến"],
+    ["沟通","gōutōng","giao tiếp"],["构成","gòuchéng","cấu thành"],["姑姑","gūgu","cô (em/chị của bố)"],
+    ["古代","gǔdài","cổ đại"],["古典","gǔdiǎn","cổ điển"],["股票","gǔpiào","cổ phiếu"],
+    ["骨头","gǔtou","xương"],["鼓掌","gǔzhǎng","vỗ tay"],["固定","gùdìng","cố định"],
+    ["挂号","guàhào","đăng ký (khám bệnh)"],["关闭","guānbì","đóng lại"],["观察","guānchá","quan sát"],
+    ["观点","guāndiǎn","quan điểm"],["观念","guānniàn","quan niệm"],["管子","guǎnzi","ống dẫn"],
+    ["冠军","guànjūn","quán quân"],["规矩","guīju","quy tắc"],["规律","guīlǜ","quy luật"],
+    ["规模","guīmó","quy mô"],["归纳","guīnà","quy nạp, tổng hợp"],["柜台","guìtái","quầy hàng"],
+    ["滚","gǔn","lăn"],["锅","guō","nồi, chảo"],["国庆节","Guóqìngjié","ngày Quốc khánh"],
+    ["国王","guówáng","quốc vương"],["果然","guǒrán","quả nhiên"],["过分","guòfèn","quá mức"],
+    ["过敏","guòmǐn","dị ứng"],["哈","hā","(âm cười)"],["海关","hǎiguān","hải quan"],
+    ["含有","hányǒu","chứa đựng"],["喊","hǎn","hét, gọi lớn"],["行业","hángyè","ngành nghề"],
+    ["豪华","háohuá","sang trọng"],["好客","hàokè","hiếu khách"],["好奇","hàoqí","tò mò"],
+    ["合同","hétong","hợp đồng"],["合影","héyǐng","chụp ảnh chung"],["合理","hélǐ","hợp lý"],
+    ["何况","hékuàng","huống chi"],["和平","hépíng","hòa bình"],["核心","héxīn","hạt nhân, trung tâm"],
+    ["恨","hèn","hận, ghét"],["猴子","hóuzi","con khỉ"],["后背","hòubèi","phía sau lưng"],
+    ["后果","hòuguǒ","hậu quả"],["呼吸","hūxī","hô hấp, thở"],["忽然","hūrán","bỗng nhiên"],
+    ["忽视","hūshì","xem nhẹ, coi thường"],["胡说","húshuō","nói bậy"],["胡同","hútòng","con hẻm"],
+    ["花费","huāfèi","tiêu tốn"],["华裔","huáyì","người gốc Hoa"],["滑","huá","trơn, trượt"],
+    ["划","huá","chèo"],["化学","huàxué","hóa học"],["话题","huàtí","đề tài"],
+    ["怀疑","huáiyí","nghi ngờ"],["缓解","huǎnjiě","giảm nhẹ, xoa dịu"],["幻想","huànxiǎng","ảo tưởng"],
+    ["慌张","huāngzhāng","hoảng loạn"],["皇帝","huángdì","hoàng đế"],["黄金","huángjīn","vàng"],
+    ["灰","huī","xám, tro"],["恢复","huīfù","phục hồi"],["挥","huī","vẫy, phất"],
+    ["汇率","huìlǜ","tỷ giá hối đoái"],["婚姻","hūnyīn","hôn nhân"],["活跃","huóyuè","sôi động, năng nổ"],
+    ["火柴","huǒchái","diêm"],["逐渐","zhújiàn","dần dần"],["随着","suízhe","theo cùng với"],
+    ["尽力","jìnlì","hết sức"],["日常","rìcháng","thường ngày"],["主动","zhǔdòng","chủ động"]
+  ],
+  hsk5: [
+    ["恰当","qiàdàng","thích hợp"],["频繁","pínfán","thường xuyên"],["隐私","yǐnsī","riêng tư"],
+    ["潜力","qiánlì","tiềm lực"],["谦虚","qiānxū","khiêm tốn"],["顽固","wángù","cố chấp"],
+    ["妥协","tuǒxié","thoả hiệp"],["灵活","línghuó","linh hoạt"],["敏感","mǐngǎn","nhạy cảm"],
+    ["抽象","chōuxiàng","trừu tượng"],["具体","jùtǐ","cụ thể"],["逻辑","luójí","logic"],
+    ["权利","quánlì","quyền lợi"],["义务","yìwù","nghĩa vụ"],["法律","fǎlǜ","pháp luật"],
+    ["政策","zhèngcè","chính sách"],["经营","jīngyíng","kinh doanh"],["投资","tóuzī","đầu tư"],
+    ["收入","shōurù","thu nhập"],["支出","zhīchū","chi tiêu"],["消费","xiāofèi","tiêu dùng"],
+    ["竞选","jìngxuǎn","tranh cử"],["抗议","kàngyì","phản đối"],["谈判","tánpàn","đàm phán"],
+    ["签订","qiāndìng","ký kết"],["承担","chéngdān","đảm nhận"],["履行","lǚxíng","thực hiện (nghĩa vụ)"],
+    ["维护","wéihù","duy trì, bảo vệ"],["哎","āi","ôi, ái"],["爱护","àihù","yêu quý, giữ gìn"],
+    ["爱惜","àixī","trân trọng"],["安慰","ānwèi","an ủi"],["安装","ānzhuāng","lắp đặt"],
+    ["岸","àn","bờ (sông, biển)"],["把握","bǎwò","nắm chắc"],["摆","bǎi","đặt, bày"],
+    ["办理","bànlǐ","xử lý (thủ tục)"],["伴随","bànsuí","đi kèm theo"],["傍晚","bàngwǎn","chiều tối"],
+    ["包裹","bāoguǒ","bưu phẩm, gói"],["包含","bāohán","bao hàm"],["包装","bāozhuāng","đóng gói"],
+    ["保持","bǎochí","duy trì"],["保存","bǎocún","bảo tồn, lưu giữ"],["保留","bǎoliú","giữ lại"],
+    ["保险","bǎoxiǎn","bảo hiểm"],["报社","bàoshè","tòa báo"],["悲伤","bēishāng","buồn bã"],
+    ["背景","bèijǐng","bối cảnh"],["被迫","bèipò","bị buộc phải"],["本质","běnzhì","bản chất"],
+    ["比例","bǐlì","tỉ lệ"],["比重","bǐzhòng","tỷ trọng"],["笔记","bǐjì","ghi chép"],
+    ["必然","bìrán","tất nhiên, chắc chắn"],["必要","bìyào","cần thiết"],["毕竟","bìjìng","xét cho cùng"],
+    ["闭","bì","đóng, nhắm"],["边疆","biānjiāng","biên cương"],["边界","biānjiè","biên giới"],
+    ["编织","biānzhī","đan, dệt"],["贬值","biǎnzhí","mất giá"],["便利","biànlì","thuận lợi"],
+    ["变革","biàngé","biến cách, cải cách"],["变迁","biànqiān","biến đổi (theo thời gian)"],["辨认","biànrèn","nhận diện"],
+    ["辩护","biànhù","bào chữa"],["标本","biāoběn","mẫu vật"],["标点","biāodiǎn","dấu câu"],
+    ["表明","biǎomíng","chứng tỏ, biểu thị rõ"],["表态","biǎotài","bày tỏ thái độ"],["并非","bìngfēi","không phải là"],
+    ["并列","bìngliè","song song, ngang hàng"],["播放","bòfàng","phát (chương trình)"],["博览会","bólǎnhuì","hội chợ, triển lãm"],
+    ["搏斗","bódòu","vật lộn, chiến đấu"],["薄","báo","mỏng"],["补充","bǔchōng","bổ sung"],
+    ["补贴","bǔtiē","trợ cấp"],["不安","bù'ān","không an tâm"],["不得了","bùdéliǎo","kinh khủng, không chịu được"],
+    ["不断","búduàn","không ngừng"],["不见得","bújiàndé","chưa chắc"],["不耐烦","bú nàifán","mất kiên nhẫn"],
+    ["不然","bùrán","nếu không thì"],["不如","bùrú","không bằng"],["不足","bùzú","không đủ"],
+    ["布置","bùzhì","bố trí, trang trí"],["财富","cáifù","tài sản, của cải"],["采购","cǎigòu","thu mua"],
+    ["采纳","cǎinà","tiếp thu, chấp nhận"],["彩虹","cǎihóng","cầu vồng"],["参与","cānyù","tham gia"],
+    ["惭愧","cánkuì","hổ thẹn"],["操心","cāoxīn","lo lắng, bận tâm"],["测量","cèliáng","đo lường"],
+    ["层次","céngcì","cấp độ, tầng lớp"],["差别","chābié","sự khác biệt"],["产量","chǎnliàng","sản lượng"],
+    ["长途","chángtú","đường dài"],["常识","chángshí","kiến thức thông thường"],["场面","chǎngmiàn","khung cảnh, cảnh tượng"],
+    ["车库","chēkù","nhà để xe"],["车厢","chēxiāng","toa xe"],["沉重","chénzhòng","nặng nề"],
+    ["陈述","chénshù","trình bày, thuật lại"],["称赞","chēngzàn","khen ngợi"],["成果","chéngguǒ","thành quả"],
+    ["成就","chéngjiù","thành tựu"],["成年","chéngnián","trưởng thành"],["成人","chéngrén","người trưởng thành"],
+    ["成天","chéngtiān","suốt ngày"],["诚信","chéngxìn","chữ tín"],["承包","chéngbāo","đấu thầu, nhận thầu"],
+    ["承受","chéngshòu","chịu đựng"],["吃力","chīlì","vất vả, tốn sức"],["池塘","chítáng","cái ao"],
+    ["迟早","chízǎo","sớm hay muộn"],["持续","chíxù","tiếp diễn liên tục"],["赤字","chìzì","thâm hụt (ngân sách)"],
+    ["冲突","chōngtū","xung đột"],["充分","chōngfèn","đầy đủ, thỏa đáng"],["重大","zhòngdà","trọng đại"],
+    ["重新","chóngxīn","làm lại"],["崇拜","chóngbài","tôn thờ, sùng bái"],["抽屉","chōuti","cái ngăn kéo"],
+    ["筹备","chóubèi","chuẩn bị (tổ chức)"],["丑","chǒu","xấu (ngoại hình)"],["出版","chūbǎn","xuất bản"],
+    ["出口","chūkǒu","xuất khẩu, cửa ra"],["出路","chūlù","hướng đi, lối ra"],["出神","chūshén","xuất thần, thất thần"],
+    ["出示","chūshì","đưa ra, trình ra"],["初步","chūbù","ban đầu, bước đầu"],["除夕","chúxī","đêm giao thừa"],
+    ["处分","chǔfèn","xử phạt"],["处境","chǔjìng","hoàn cảnh, tình cảnh"],["处置","chǔzhì","xử lý"],
+    ["传染","chuánrǎn","lây nhiễm"],["传说","chuánshuō","truyền thuyết"],["窗帘","chuānglián","màn cửa sổ"],
+    ["床单","chuángdān","khăn trải giường"],["创立","chuànglì","sáng lập"],["创新","chuàngxīn","sáng tạo, đổi mới"],
+    ["吹牛","chuīniú","nói khoác"],["磁盘","cípán","đĩa từ"],["次序","cìxù","thứ tự"],
+    ["刺激","cìjī","kích thích"],["匆忙","cōngmáng","vội vàng"],["从容","cóngróng","điềm tĩnh, thư thái"],
+    ["促使","cùshǐ","thúc đẩy khiến cho"],["摧毁","cuīhuǐ","phá hủy"],["脆弱","cuìruò","yếu đuối, mong manh"],
+    ["存款","cúnkuǎn","tiền gửi tiết kiệm"],["答辩","dábiàn","bảo vệ (luận văn)"],["达成","dáchéng","đạt được (thỏa thuận)"],
+    ["打工","dǎgōng","làm thuê"],["打猎","dǎliè","đi săn"],["打喷嚏","dǎ pēntì","hắt hơi"],
+    ["打听","dǎtīng","hỏi thăm, dò hỏi"],["大伙儿","dàhuǒr","mọi người"],["大厦","dàshà","tòa nhà lớn"],
+    ["呆","dāi","ở lại, ngây ngốc"],["代价","dàijià","giá phải trả"],["待遇","dàiyù","đãi ngộ"],
+    ["担保","dānbǎo","bảo đảm"],["单元","dānyuán","đơn vị (nhà, chương)"],["胆固醇","dǎngùchún","cholesterol"],
+    ["淡","dàn","nhạt"],["当代","dāngdài","hiện đại, đương đại"],["当今","dāngjīn","hiện nay"],
+    ["当年","dāngnián","năm đó"],["当前","dāngqián","trước mắt, hiện tại"],["当事人","dāngshìrén","người trong cuộc"],
+    ["党","dǎng","đảng"],["档案","dàng'àn","hồ sơ lưu trữ"],["导演","dǎoyǎn","đạo diễn"],
+    ["岛","dǎo","đảo"],["倒霉","dǎoméi","xui xẻo"],["盗窃","dàoqiè","trộm cắp"],
+    ["等待","děngdài","chờ đợi"],["等候","děnghòu","chờ đợi"],["低估","dīgū","đánh giá thấp"],
+    ["滴","dī","nhỏ giọt"],["敌视","díshì","thù địch"],["的确","díquè","đích thực, quả thực"],
+    ["地步","dìbù","mức độ, tình cảnh"],["地税","dìshuì","thuế đất"],["地毯","dìtǎn","tấm thảm"],
+    ["地铁","dìtiě","tàu điện ngầm"],["点缀","diǎnzhuì","tô điểm"],["点子","diǎnzi","ý tưởng, chủ ý"],
+    ["典型","diǎnxíng","điển hình"],["电源","diànyuán","nguồn điện"],["刁难","diāonàn","gây khó dễ"],
+    ["雕刻","diāokè","điêu khắc"],["调节","tiáojié","điều chỉnh"],["调解","tiáojiě","hòa giải"],
+    ["调整","tiáozhěng","điều chỉnh"],["跌","diē","ngã, giảm (giá)"],["定居","dìngjū","định cư"],
+    ["定期","dìngqī","định kỳ"],["丢","diū","mất, bỏ"],["东道主","dōngdàozhǔ","chủ nhà (tiếp đón)"],
+    ["动力","dònglì","động lực"],["动机","dòngjī","động cơ"],["动静","dòngjing","động tĩnh, tiếng động"],
+    ["动手","dòngshǒu","bắt tay vào"],["动态","dòngtài","động thái"],["冻","dòng","đông lạnh"],
+    ["洞","dòng","cái hang, lỗ"],["兜","dōu","cái túi"],["豆腐","dòufu","đậu phụ"],
+    ["逗","dòu","chọc cười"],["独裁","dúcái","độc tài"],["独特","dútè","độc đáo"],
+    ["渡","dù","vượt qua (sông)"],["端","duān","đầu, mút"],["端正","duānzhèng","ngay ngắn, chỉnh tề"],
+    ["短暂","duǎnzàn","ngắn ngủi"],["对付","duìfu","đối phó"],["对手","duìshǒu","đối thủ"],
+    ["对应","duìyìng","tương ứng"],["兑换","duìhuàn","đổi (tiền)"],["蹲","dūn","ngồi xổm"],
+    ["多元化","duōyuánhuà","đa nguyên hóa"],["躲藏","duǒcáng","trốn tránh"],["恶心","ěxin","buồn nôn"],
+    ["恩怨","ēnyuàn","ân oán"],["而已","éryǐ","mà thôi"],["发布","fābù","công bố, phát hành"],
+    ["发财","fācái","phát tài"],["发射","fāshè","phóng, bắn"],["罚","fá","phạt"],
+    ["法官","fǎguān","thẩm phán"],["法人","fǎrén","pháp nhân"],["法庭","fǎtíng","tòa án"],
+    ["繁华","fánhuá","phồn hoa, sầm uất"],["繁体字","fántǐzì","chữ Hán phồn thể"],["凡是","fánshì","hễ, bất cứ"],
+    ["反抗","fǎnkàng","chống lại"],["反射","fǎnshè","phản xạ"],["反思","fǎnsī","suy ngẫm lại"],
+    ["反问","fǎnwèn","hỏi vặn lại"],["范畴","fànchóu","phạm trù"],["犯罪","fànzuì","phạm tội"],
+    ["方言","fāngyán","phương ngữ, tiếng địa phương"],["方针","fāngzhēn","phương châm"],["防止","fángzhǐ","phòng ngừa"],
+    ["防治","fángzhì","phòng và trị (bệnh)"],["访问","fǎngwèn","thăm hỏi, phỏng vấn"],["放大","fàngdà","phóng to"],
+    ["放射","fàngshè","phóng xạ, phát ra"],["飞跃","fēiyuè","nhảy vọt"],["非法","fēifǎ","phi pháp"],
+    ["肥沃","féiwò","phì nhiêu, màu mỡ"],["废除","fèichú","hủy bỏ"],["废弃","fèiqì","bỏ đi, loại bỏ"],
+    ["费用","fèiyòng","chi phí"],["分寸","fēncun","mức độ hợp lý"],["分解","fēnjiě","phân giải"],
+    ["分裂","fēnliè","phân liệt, chia rẽ"],["分明","fēnmíng","rõ ràng"],["分歧","fēnqí","bất đồng"],
+    ["分散","fēnsàn","phân tán"],["纠纷","jiūfēn","tranh chấp"],["丰满","fēngmǎn","đầy đặn"],
+    ["丰盛","fēngshèng","phong phú, thịnh soạn"],["丰厚","fēnghòu","hậu hĩnh, dồi dào"],["锋利","fēnglì","sắc bén"],
+    ["逢","féng","gặp phải"],["否决","fǒujué","phủ quyết"],["夫妇","fūfù","vợ chồng"],
+    ["敷衍","fūyǎn","làm qua loa"],["扶持","fúchí","hỗ trợ, nâng đỡ"],["服气","fúqì","chịu thua, phục"],
+    ["俯视","fǔshì","nhìn xuống"],["辅导","fǔdǎo","phụ đạo, hướng dẫn"],["腐败","fǔbài","tham nhũng, thối rữa"],
+    ["腐蚀","fǔshí","ăn mòn"],["附属","fùshǔ","phụ thuộc, trực thuộc"],["改良","gǎiliáng","cải lương, cải tiến"],
+    ["盖章","gàizhāng","đóng dấu"],["干扰","gānrǎo","gây nhiễu, làm phiền"],["尴尬","gāngà","lúng túng, khó xử"],
+    ["感染","gǎnrǎn","lây nhiễm, cảm nhiễm"],["感慨","gǎnkǎi","cảm khái"],["赶紧","gǎnjǐn","vội vàng, nhanh chóng"],
+    ["高峰","gāofēng","cao điểm, đỉnh cao"],["高涨","gāozhǎng","dâng cao"],["搞笑","gǎoxiào","gây cười"],
+    ["告知","gàozhī","thông báo cho biết"],["割","gē","cắt, cắt bỏ"],["格局","géjú","cục diện, bố cục"],
+    ["隔离","gélí","cách ly"],["权威","quánwēi","quyền uy, uy tín"],["渠道","qúdào","kênh, con đường"],
+    ["契机","qìjī","cơ hội, mấu chốt"],["蕴含","yùnhán","chứa đựng, ẩn chứa"],["瞻望","zhānwàng","nhìn xa, kỳ vọng"]
+  ],
+  hsk6: [
+    ["隐患","yǐnhuàn","nguy cơ tiềm ẩn"],["瓶颈","píngjǐng","nút thắt cổ chai"],["弊端","bìduān","tệ nạn, khiếm khuyết"],
+    ["权衡","quánhéng","cân nhắc"],["遏制","èzhì","kiềm chế"],["卓越","zhuóyuè","xuất sắc"],
+    ["荒谬","huāngmiù","vô lý"],["譬如","pìrú","ví dụ như"],["鉴于","jiànyú","xét thấy"],
+    ["况且","kuàngqiě","huống chi"],["姑且","gūqiě","tạm thời"],["不妨","bùfáng","không ngại"],
+    ["未免","wèimiǎn","không tránh khỏi"],["索性","suǒxìng","thẳng luôn, dứt khoát"],["迄今","qìjīn","cho đến nay"],
+    ["悬殊","xuánshū","chênh lệch lớn"],["涣散","huànsàn","rời rạc, lỏng lẻo"],["徘徊","páihuái","do dự, lang thang"],
+    ["犹豫","yóuyù","do dự"],["邂逅","xièhòu","gặp gỡ tình cờ"],["蜕变","tuìbiàn","biến đổi"],
+    ["潜移默化","qiányímòhuà","ảnh hưởng dần dần"],["举足轻重","jǔzúqīngzhòng","có vai trò quan trọng"],["络绎不绝","luòyìbùjué","liên tục không dứt"],
+    ["层出不穷","céngchūbùqióng","xuất hiện liên tục"],["哀悼","āidào","đau thương, thương tiếc"],["癌症","áizhèng","bệnh ung thư"],
+    ["爱不释手","àibùshìshǒu","yêu thích không rời tay"],["暧昧","àimèi","mập mờ, mờ ám"],["安居乐业","ānjūlèyè","an cư lạc nghiệp"],
+    ["按摩","ànmó","xoa bóp, mát-xa"],["案例","ànlì","án lệ, trường hợp điển hình"],["昂贵","ángguì","đắt đỏ"],
+    ["黯淡","àndàn","tối tăm, ảm đạm"],["熬","áo","hầm, ninh; chịu đựng"],["奥秘","àomì","điều bí ẩn"],
+    ["巴不得","bābude","mong mỏi, ước gì"],["拔苗助长","bámiáozhùzhǎng","nhổ mạ giúp lớn (nóng vội)"],["把关","bǎguān","gác cửa, kiểm soát chất lượng"],
+    ["罢工","bàgōng","đình công"],["霸道","bàdào","ngang ngược, bá đạo"],["掰","bāi","bẻ ra"],
+    ["白手起家","báishǒuqǐjiā","tay trắng làm nên"],["摆脱","bǎituō","thoát khỏi"],["败坏","bàihuài","làm bại hoại, làm hư"],
+    ["拜访","bàifǎng","đến thăm"],["拜托","bàituō","nhờ vả, xin nhờ"],["颁布","bānbù","ban hành"],
+    ["颁发","bānfā","cấp phát, ban hành"],["版本","bǎnběn","phiên bản"],["半途而废","bàntú'érfèi","bỏ dở giữa đường"],
+    ["扮演","bànyǎn","diễn vai"],["伴侣","bànlǚ","người bạn đời"],["帮凶","bāngxiōng","kẻ đồng phạm"],
+    ["榜样","bǎngyàng","tấm gương, hình mẫu"],["包庇","bāobì","bao che"],["剥削","bōxuē","bóc lột"],
+    ["饱和","bǎohé","bão hòa"],["曝光","bàoguāng","phơi sáng, tiết lộ"],["报复","bàofù","trả thù"],
+    ["报销","bàoxiāo","thanh toán chi phí"],["暴力","bàolì","bạo lực"],["卑鄙","bēibǐ","hèn hạ, đê tiện"],
+    ["悲哀","bēi'āi","đau buồn, thương xót"],["北极","běijí","Bắc Cực"],["背叛","bèipàn","phản bội"],
+    ["备份","bèifèn","sao lưu"],["卑微","bēiwēi","thấp hèn"],["卑劣","bēiliè","đê hèn"],
+    ["贝壳","bèiké","vỏ sò"],["奔波","bēnbō","bôn ba, vất vả ngược xuôi"],["奔驰","bēnchí","phi nhanh, chạy nhanh"],
+    ["本能","běnnéng","bản năng"],["本身","běnshēn","bản thân, chính nó"],["崩溃","bēngkuì","sụp đổ"],
+    ["甭","béng","không cần, khỏi cần"],["蹦","bèng","nhảy tưng tưng"],["逼迫","bīpò","ép buộc"],
+    ["鄙视","bǐshì","khinh miệt"],["笔试","bǐshì","thi viết"],["比方","bǐfang","ví như"],
+    ["比喻","bǐyù","tỷ dụ, ẩn dụ"],["闭塞","bìsè","kín kẽ, lạc hậu, tắc nghẽn"],["弊病","bìbìng","tệ nạn, khuyết điểm"],
+    ["边缘","biānyuán","ven, rìa, bờ"],["贬低","biǎndī","hạ thấp, đánh giá thấp"],["鞭策","biāncè","thúc đẩy, khuyến khích"],
+    ["便于","biànyú","tiện cho, dễ cho"],["辩解","biànjiě","biện giải, giải thích"],["标记","biāojì","dấu hiệu, ký hiệu"],
+    ["表彰","biǎozhāng","tuyên dương, khen thưởng"],["屏幕","píngmù","màn hình"],["秉承","bǐngchéng","thừa hành, tuân theo"],
+    ["并存","bìngcún","cùng tồn tại"],["拨","bō","quay số, gạt"],["波涛","bōtāo","sóng lớn"],
+    ["博大","bódà","rộng lớn, bao la"],["薄弱","bóruò","yếu kém, mỏng manh"],["捕捉","bǔzhuō","bắt, nắm bắt"],
+    ["不堪","bùkān","không thể chịu được"],["不可思议","bùkěsīyì","không thể hiểu được, khó tin"],["不言而喻","bùyán'éryù","không nói cũng hiểu"],
+    ["不择手段","bùzéshǒuduàn","không từ thủ đoạn"],["布局","bùjú","bố cục"],["步伐","bùfá","bước đi, nhịp bước"],
+    ["财政","cáizhèng","tài chính"],["裁判","cáipàn","trọng tài, phán quyết"],["裁员","cáiyuán","cắt giảm nhân sự"],
+    ["苍白","cāngbái","xanh xao, nhợt nhạt"],["沧桑","cāngsāng","dâu bể, biến động cuộc đời"],["操纵","cāozòng","điều khiển, giật dây"],
+    ["草率","cǎoshuài","hấp tấp, cẩu thả"],["测算","cèsuàn","tính toán, đo lường"],["策划","cèhuà","hoạch định, lên kế hoạch"],
+    ["策略","cèlüè","chiến lược, sách lược"],["差异","chāyì","sự khác biệt"],["搓","cuō","chà, xát"],
+    ["搀","chān","đỡ, dìu"],["馋","chán","tham ăn"],["缠绕","chánrào","quấn quanh"],
+    ["产权","chǎnquán","quyền sở hữu tài sản"],["阐述","chǎnshù","trình bày rõ, luận giải"],["猖狂","chāngkuáng","hung hăng, ngông cuồng"],
+    ["昌盛","chāngshèng","thịnh vượng"],["尝试","chángshì","thử nghiệm"],["偿还","chánghuán","hoàn trả, bồi thường"],
+    ["畸形","jīxíng","kỳ hình, dị dạng"],["炒作","chǎozuò","thổi phồng, đầu cơ tin tức"],["车辙","chēzhé","vết bánh xe"],
+    ["扯","chě","kéo, lôi"],["彻夜","chèyè","suốt đêm"],["沉淀","chéndiàn","lắng đọng, kết tủa"],
+    ["沉浸","chénjìn","đắm mình, chìm đắm"],["陈旧","chénjiù","cũ kỹ, lạc hậu"],["衬托","chèntuō","làm nổi bật, tôn lên"],
+    ["称号","chēnghào","danh hiệu"],["称呼","chēnghu","cách gọi, xưng hô"],["澄清","chéngqīng","làm rõ, thanh lọc"],
+    ["惩罚","chéngfá","trừng phạt"],["驰名","chímíng","nổi tiếng, lừng danh"],["尺寸","chǐcùn","kích thước"],
+    ["耻辱","chǐrǔ","nhục nhã, sỉ nhục"],["斥责","chìzé","quở trách"],["赐","cì","ban cho, tặng"],
+    ["炽热","chìrè","nóng bỏng, cháy bỏng"],["充斥","chōngchì","tràn ngập, tràn lan"],["冲动","chōngdòng","bốc đồng, xung động"],
+    ["崇高","chónggāo","cao cả"],["崇尚","chóngshàng","tôn sùng, coi trọng"],["筹措","chóucuò","huy động, thu xếp (vốn)"],
+    ["酬谢","chóuxiè","đền đáp, cảm ơn"],["丑陋","chǒulòu","xấu xí"],["出没","chūmò","xuất hiện và biến mất"],
+    ["出息","chūxi","tiền đồ, có triển vọng"],["出卖","chūmài","bán, phản bội"],["初衷","chūzhōng","ý định ban đầu"],
+    ["锄头","chútou","cái cuốc"],["矗立","chùlì","sừng sững, đứng cao"],["触犯","chùfàn","xúc phạm, vi phạm"],
+    ["穿梭","chuānsuō","đi lại như con thoi"],["传承","chuánchéng","truyền lại, kế thừa"],["喘气","chuǎnqì","thở hổn hển"],
+    ["串联","chuànlián","liên kết, mắc nối tiếp"],["创业","chuàngyè","khởi nghiệp"],["创作","chuàngzuò","sáng tác"],
+    ["吹嘘","chuīxū","khoe khoang, thổi phồng"],["垂直","chuízhí","thẳng đứng, trực giao"],["纯洁","chúnjié","trong sạch, thuần khiết"],
+    ["淳朴","chúnpǔ","chất phác, thuần hậu"],["蠢","chǔn","ngu ngốc"],["刺骨","cìgǔ","buốt tận xương"],
+    ["从容不迫","cóngróngbùpò","điềm tĩnh, không hấp tấp"],["丛","cóng","cụm, rừng"],["凑合","còuhe","tạm tạm, chắp vá"],
+    ["粗暴","cūbào","thô bạo"],["粗鲁","cūlǔ","thô lỗ"],["篡改","cuàngǎi","xuyên tạc, sửa đổi trái phép"],
+    ["摧残","cuīcán","hủy hoại, giày vò"],["搭档","dādàng","cộng tác, bạn diễn"],["搭配","dāpèi","kết hợp, phối hợp"],
+    ["答复","dáfù","trả lời, phúc đáp"],["打包","dǎbāo","đóng gói"],["打压","dǎyā","đàn áp, dồn ép"],
+    ["大不了","dàbuliǎo","cùng lắm thì, chẳng qua"],["大肆","dàsì","tùy tiện, mặc sức"],["大意","dàyi","đại ý; lơ là"],
+    ["歹徒","dǎitú","kẻ xấu, tội phạm"],["逮捕","dàibǔ","bắt giữ"],["殆尽","dàijìn","gần hết, cạn kiệt"],
+    ["怠慢","dàimàn","lơ là, thờ ơ"],["单薄","dānbó","mỏng manh, yếu ớt"],["胆量","dǎnliàng","sự can đảm"],
+    ["淡薄","dànbó","nhạt nhòa, phai mờ"],["淡季","dànjì","mùa vắng khách"],["淡忘","dànwàng","quên lãng"],
+    ["蛋白质","dànbáizhì","protein"],["当初","dāngchū","lúc đầu"],["当务之急","dāngwùzhījí","việc cấp bách trước mắt"],
+    ["党派","dǎngpài","đảng phái"],["档次","dàngcì","cấp bậc, hạng"],["捣乱","dǎoluàn","gây rối"],
+    ["盗版","dàobǎn","hàng nhái, lậu"],["悼念","dàoniàn","tưởng niệm"],["得不偿失","débùchángshī","lợi bất cập hại"],
+    ["得力","délì","đắc lực, có năng lực"],["得天独厚","détiāndúhòu","có điều kiện thiên nhiên ưu đãi"],["德行","déxíng","đức hạnh"],
+    ["登陆","dēnglù","đăng nhập, đổ bộ"],["等级","děngjí","cấp bậc"],["低迷","dīmí","trì trệ, ảm đạm"],
+    ["滴水穿石","dīshuǐchuānshí","kiên trì mài sắt nên kim"],["敌意","díyì","ác ý, thù hằn"],["抵抗","dǐkàng","kháng cự"],
+    ["抵制","dǐzhì","tẩy chay, kháng cự"],["地势","dìshì","địa thế"],["地域","dìyù","địa vực, vùng đất"],
+    ["缔结","dìjié","ký kết"],["颠倒","diāndǎo","đảo lộn"],["典礼","diǎnlǐ","lễ, nghi lễ"],
+    ["典雅","diǎnyǎ","thanh lịch, tao nhã"],["垛","duò","đống, chồng"],["叼","diāo","ngậm ở miệng"],
+    ["雕塑","diāosù","tượng điêu khắc"],["凋谢","diāoxiè","tàn héo"],["吊","diào","treo"],
+    ["调动","diàodòng","điều động"],["跌幅","diēfú","mức giảm giá"],["叠","dié","gấp, chồng lên"],
+    ["顶尖","dǐngjiān","hàng đầu, đỉnh cao"],["顶峰","dǐngfēng","đỉnh cao nhất"],["定局","dìngjú","kết luận, đã ngã ngũ"],
+    ["定义","dìngyì","định nghĩa"],["东张西望","dōngzhāngxīwàng","nhìn ngang nhìn ngửa"],["动荡","dòngdàng","biến động, chao đảo"],
+    ["动辄","dòngzhé","hễ động là, thường xuyên"],["陡","dǒu","dốc, đột ngột"],["逗号","dòuhào","dấu phẩy"],
+    ["独树一帜","dúshùyízhì","tự mình đứng riêng một lá cờ"],["赌博","dǔbó","đánh bạc"],["杜绝","dùjué","dứt tuyệt, chấm dứt"],
+    ["渡口","dùkǒu","bến đò"],["端午节","Duānwǔjié","Tết Đoan Ngọ"],["短促","duǎncù","ngắn ngủi, gấp gáp"],
+    ["断言","duànyán","khẳng định, đoán chắc"],["堆积","duījī","chất đống"],["对称","duìchèn","đối xứng"],
+    ["对峙","duìzhì","đối đầu, đối trọng"],["兑现","duìxiàn","đổi tiền mặt, thực hiện lời hứa"],["蹲点","dūndiǎn","đóng chốt, ở lại giám sát"],
+    ["顿时","dùnshí","ngay lập tức"],["多元","duōyuán","đa nguyên, đa dạng"],["堕落","duòluò","suy đồi, sa đọa"],
+    ["讹诈","ézhà","tống tiền, lừa gạt"],["恶化","èhuà","xấu đi, xấu hóa"],["遏止","èzhǐ","ngăn chặn"],
+    ["恩惠","ēnhuì","ơn huệ"],["儿戏","érxì","trò trẻ con, chuyện đùa"],["尔虞我诈","ěryúwǒzhà","lừa gạt lẫn nhau"],
+    ["发泄","fāxiè","xả (cảm xúc), trút bỏ"],["发育","fāyù","phát dục, phát triển (cơ thể)"],["发端","fāduān","khởi đầu, nguồn gốc"],
+    ["法制","fǎzhì","pháp chế"],["繁殖","fánzhí","sinh sôi"],["反驳","fǎnbó","phản bác"],
+    ["反感","fǎngǎn","phản cảm, ác cảm"],["反馈","fǎnkuì","phản hồi"],["反之","fǎnzhī","ngược lại"],
+    ["泛滥","fànlàn","tràn lan, lũ lụt"],["贩卖","fànmài","buôn bán"],["方位","fāngwèi","phương vị"],
+    ["妨害","fánghài","gây hại"],["纺织","fǎngzhī","dệt may"],["诡计","guǐjì","mưu kế xấu"],
+    ["肺","fèi","phổi"],["废墟","fèixū","đống đổ nát"],["分辨","fēnbiàn","phân biệt"],
+    ["分红","fēnhóng","chia lợi tức"],["分外","fènwài","đặc biệt, hết sức"],["纷纭","fēnyún","lộn xộn, nhiều ý kiến"],
+    ["坟墓","fénmù","mộ phần"],["焚烧","fénshāo","đốt cháy"],["粉末","fěnmò","bột"],
+    ["粉碎","fěnsuì","nghiền nát, đập tan"],["奉献","fèngxiàn","cống hiến, dâng hiến"],["缝隙","fèngxì","khe hở"],
+    ["讽刺","fěngcì","châm biếm, mỉa mai"],["佛教","fójiào","Phật giáo"],["夫人","fūrén","phu nhân"],
+    ["扶植","fúzhí","nâng đỡ, phù trợ"],["浮躁","fúzào","nóng nảy, hấp tấp"],["浮夸","fúkuā","khoa trương"],
+    ["福气","fúqi","số phận may mắn"],["俯瞰","fǔkàn","nhìn từ trên xuống"],["辐射","fúshè","phóng xạ, tia xạ"],
+    ["复辟","fùbì","phục hồi (chế độ cũ)"],["蓬勃","péngbó","bồng bột, mạnh mẽ"],["恪守","kèshǒu","tuân giữ nghiêm ngặt"],
+    ["矜持","jīnchí","giữ ý, kiềm chế"],["缜密","zhěnmì","chặt chẽ, tỉ mỉ"],["筵席","yánxí","tiệc, yến tiệc"],
+    ["斡旋","wòxuán","hòa giải, xoay chuyển"]
+  ]
+};
+const LEVEL_KEYS = ["hsk1","hsk2","hsk3","hsk4","hsk5","hsk6"];
+const wordId = (lvl,i)=> lvl+"-"+i;
+
+/* ================= STATE ================= */
+let state = {
+  level: "hsk1",
+  tab: "flash",
+  cardIndex: 0,
+  flipped: false,
+  mastered: {},        // { "hsk1-0": true, ... }
+  quiz: { pool: [], idx:0, score:0, total:0, answered:false, choice:null, correctIdx:null },
+  search: ""
+};
+
+/* ---- persistence via artifact storage, falls back to memory ---- */
+async function loadProgress(){
+  try{
+    const res = await window.storage.get("hsk-mastered", false);
+    if(res && res.value) state.mastered = JSON.parse(res.value);
+  }catch(e){ /* no stored data yet or storage unavailable */ }
+}
+async function saveProgress(){
+  try{ await window.storage.set("hsk-mastered", JSON.stringify(state.mastered), false); }
+  catch(e){ /* storage unavailable, progress stays in-memory only */ }
+}
+
+/* ================= HELPERS ================= */
+function levelLabel(k){ return k.replace("hsk","HSK "); }
+function levelWords(k){ return VOCAB[k]; }
+function levelMasteredCount(k){
+  return levelWords(k).reduce((n,_,i)=> n + (state.mastered[wordId(k,i)] ? 1:0), 0);
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+/* ================= RENDER: LEVEL RAIL ================= */
+function renderLevelRail(){
+  const rail = document.getElementById("levelRail");
+  rail.innerHTML = "";
+  LEVEL_KEYS.forEach(k=>{
+    const total = levelWords(k).length;
+    const done = levelMasteredCount(k);
+    const btn = document.createElement("div");
+    btn.className = "level-pill" + (k===state.level ? " active":"") + (done===total ? " mastered-all":"");
+    btn.innerHTML = `<div class="lv-num">${k.replace("hsk","")}</div><div class="lv-label">HSK</div>`;
+    btn.onclick = ()=>{
+      state.level = k; state.cardIndex = 0; state.flipped = false;
+      state.quiz = { pool:[], idx:0, score:0, total:0, answered:false, choice:null, correctIdx:null };
+      renderAll();
+    };
+    rail.appendChild(btn);
+  });
+}
+
+/* ================= RENDER: FLASHCARD VIEW ================= */
+function renderFlash(){
+  const words = levelWords(state.level);
+  const i = state.cardIndex;
+  const w = words[i];
+  const id = wordId(state.level, i);
+  const isMastered = !!state.mastered[id];
+
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="section-title">
+      <span class="zh">卡片</span> Thẻ ghi nhớ ${levelLabel(state.level)}
+      <span class="progress-line">${i+1}/${words.length}</span>
+    </div>
+    <div class="card-stage">
+      <div class="flashcard ${state.flipped?'flipped':''}" id="flashcard">
+        <div class="flashcard-inner">
+          <div class="face front">
+            <div class="hanzi-big">${w[0]}</div>
+            <div class="hint-tap">chạm vào thẻ để xem nghĩa</div>
+            <div class="stamp ${isMastered?'show':''}">已<br>掌握</div>
+          </div>
+          <div class="face back">
+            <div class="pinyin-big">${w[1]}</div>
+            <div class="meaning-big">${w[2]}</div>
+            <div class="hanzi-mini">${w[0]}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-controls">
+        <button class="btn btn-ghost" id="prevBtn">‹ Trước</button>
+        <button class="btn ${isMastered?'btn-jade done':'btn-jade'}" id="masterBtn">${isMastered? '✓ Đã thuộc':'Đã thuộc'}</button>
+        <button class="btn btn-ghost" id="nextBtn">Sau ›</button>
+      </div>
+      <div class="dots">${words.map((_,idx)=>{
+        const wid = wordId(state.level, idx);
+        const cls = idx===i ? "cur" : (state.mastered[wid] ? "ok":"");
+        return `<span class="dot ${cls}"></span>`;
+      }).join("")}</div>
+    </div>
+  `;
+  const main = document.getElementById("mainView");
+  main.innerHTML = "";
+  main.appendChild(wrap);
+
+  document.getElementById("flashcard").onclick = ()=>{
+    state.flipped = !state.flipped;
+    renderFlash();
+  };
+  document.getElementById("prevBtn").onclick = (e)=>{
+    e.stopPropagation();
+    state.cardIndex = (i - 1 + words.length) % words.length;
+    state.flipped = false;
+    renderFlash();
+  };
+  document.getElementById("nextBtn").onclick = (e)=>{
+    e.stopPropagation();
+    state.cardIndex = (i + 1) % words.length;
+    state.flipped = false;
+    renderFlash();
+  };
+  document.getElementById("masterBtn").onclick = (e)=>{
+    e.stopPropagation();
+    if(isMastered){ delete state.mastered[id]; } else { state.mastered[id] = true; }
+    saveProgress();
+    renderFlash();
+    renderLevelRail();
+  };
+}
+
+/* ================= RENDER: QUIZ VIEW ================= */
+function newQuizQuestion(){
+  const words = levelWords(state.level);
+  if(words.length < 4){ state.quiz.pool = []; return; }
+  if(state.quiz.pool.length === 0){
+    state.quiz.pool = shuffle(words.map((_,i)=>i));
+  }
+  const correctIdx = state.quiz.pool.shift();
+  const wrongPool = shuffle(words.map((_,i)=>i).filter(x=>x!==correctIdx)).slice(0,3);
+  const options = shuffle([correctIdx, ...wrongPool]);
+  state.quiz.current = { correctIdx, options };
+  state.quiz.answered = false;
+  state.quiz.choice = null;
+}
+
+function renderQuiz(){
+  const words = levelWords(state.level);
+  const main = document.getElementById("mainView");
+  main.innerHTML = "";
+
+  if(words.length < 4){
+    main.innerHTML = `
+      <div class="section-title"><span class="zh">测验</span> Kiểm tra</div>
+      <div class="quiz-empty"><span class="zh-big">不够</span>Cấp độ này cần thêm từ để tạo câu hỏi trắc nghiệm.</div>`;
+    return;
+  }
+
+  if(!state.quiz.current){ newQuizQuestion(); }
+  const { correctIdx, options } = state.quiz.current;
+  const qWord = words[correctIdx];
+
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="section-title"><span class="zh">测验</span> Kiểm tra ${levelLabel(state.level)}</div>
+    <div class="quiz-card">
+      <div class="quiz-score">Điểm: ${state.quiz.score}/${state.quiz.total}</div>
+      <div class="quiz-hanzi">${qWord[0]}</div>
+      <div class="quiz-sub">${qWord[1]} · chọn nghĩa đúng</div>
+    </div>
+    <div class="options" id="optionsBox"></div>
+    <div class="quiz-next" id="nextWrap"></div>
+  `;
+  main.appendChild(wrap);
+
+  const optionsBox = wrap.querySelector("#optionsBox");
+  options.forEach(optIdx=>{
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.textContent = words[optIdx][2];
+    btn.onclick = ()=>{
+      if(state.quiz.answered) return;
+      state.quiz.answered = true;
+      state.quiz.total += 1;
+      if(optIdx === correctIdx) state.quiz.score += 1;
+      state.quiz.choice = optIdx;
+      renderQuiz();
+    };
+    if(state.quiz.answered){
+      btn.disabled = true;
+      if(optIdx === correctIdx) btn.classList.add("correct");
+      else if(optIdx === state.quiz.choice) btn.classList.add("wrong");
+    }
+    optionsBox.appendChild(btn);
+  });
+
+  const nextWrap = wrap.querySelector("#nextWrap");
+  if(state.quiz.answered){
+    const nb = document.createElement("button");
+    nb.className = "btn btn-seal";
+    nb.style.width = "100%";
+    nb.textContent = "Câu tiếp theo ›";
+    nb.onclick = ()=>{ state.quiz.current = null; newQuizQuestion(); renderQuiz(); };
+    nextWrap.appendChild(nb);
+  }
+}
+
+/* ================= RENDER: LIST VIEW ================= */
+function renderList(){
+  const words = levelWords(state.level);
+  const main = document.getElementById("mainView");
+  main.innerHTML = "";
+
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="section-title"><span class="zh">词汇</span> Từ vựng ${levelLabel(state.level)}
+      <span class="progress-line">${levelMasteredCount(state.level)}/${words.length}</span>
+    </div>
+    <div class="search-box">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#786F62" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+      <input id="searchInput" placeholder="Tìm theo chữ Hán, pinyin hoặc nghĩa..." value="${state.search}">
+    </div>
+    <div id="wordListBox"></div>
+  `;
+  main.appendChild(wrap);
+
+  function draw(){
+    const q = state.search.trim().toLowerCase();
+    const box = wrap.querySelector("#wordListBox");
+    box.innerHTML = "";
+    const filtered = words.map((w,i)=>({w,i})).filter(({w})=>{
+      if(!q) return true;
+      return w[0].includes(q) || w[1].toLowerCase().includes(q) || w[2].toLowerCase().includes(q);
+    });
+    if(filtered.length===0){
+      box.innerHTML = `<div class="empty-note">Không tìm thấy từ nào phù hợp.</div>`;
+      return;
+    }
+    filtered.forEach(({w,i})=>{
+      const id = wordId(state.level,i);
+      const row = document.createElement("div");
+      row.className = "word-row";
+      row.innerHTML = `
+        <div class="wh">${w[0]}</div>
+        <div class="wm"><div class="wp">${w[1]}</div><div class="wv">${w[2]}</div></div>
+        <div class="wc ${state.mastered[id]?'on':''}"></div>
+      `;
+      row.querySelector(".wc").onclick = ()=>{
+        if(state.mastered[id]) delete state.mastered[id]; else state.mastered[id]=true;
+        saveProgress();
+        draw();
+        renderLevelRail();
+      };
+      box.appendChild(row);
+    });
+  }
+  draw();
+  wrap.querySelector("#searchInput").oninput = (e)=>{ state.search = e.target.value; draw(); };
+}
+
+/* ================= RENDER: PROGRESS VIEW ================= */
+function renderProgress(){
+  const main = document.getElementById("mainView");
+  main.innerHTML = "";
+
+  const totalWords = LEVEL_KEYS.reduce((n,k)=> n + levelWords(k).length, 0);
+  const totalMastered = LEVEL_KEYS.reduce((n,k)=> n + levelMasteredCount(k), 0);
+  const levelsDone = LEVEL_KEYS.filter(k=> levelMasteredCount(k)===levelWords(k).length).length;
+
+  const wrap = document.createElement("div");
+  wrap.innerHTML = `
+    <div class="section-title"><span class="zh">进度</span> Tiến độ học tập</div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="num">${totalMastered}</div><div class="lab">Từ đã thuộc</div></div>
+      <div class="stat-box"><div class="num">${totalWords}</div><div class="lab">Tổng số từ</div></div>
+      <div class="stat-box"><div class="num">${levelsDone}</div><div class="lab">Cấp hoàn thành</div></div>
+    </div>
+    <div id="barsBox"></div>
+  `;
+  main.appendChild(wrap);
+
+  const barsBox = wrap.querySelector("#barsBox");
+  LEVEL_KEYS.forEach(k=>{
+    const total = levelWords(k).length;
+    const done = levelMasteredCount(k);
+    const pct = total ? Math.round(done/total*100) : 0;
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="bar-top"><span>${levelLabel(k)}</span><span>${done}/${total}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+    `;
+    barsBox.appendChild(row);
+  });
+}
+
+/* ================= TAB SWITCH ================= */
+function renderTabbar(){
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.classList.toggle("active", btn.dataset.tab === state.tab);
+    btn.onclick = ()=>{
+      state.tab = btn.dataset.tab;
+      if(state.tab === "quiz"){ state.quiz.current = null; }
+      renderAll();
+    };
+  });
+}
+
+function renderMain(){
+  if(state.tab === "flash") renderFlash();
+  else if(state.tab === "quiz") renderQuiz();
+  else if(state.tab === "list") renderList();
+  else if(state.tab === "progress") renderProgress();
+}
+
+function renderAll(){
+  renderLevelRail();
+  renderTabbar();
+  renderMain();
+}
+
+/* ================= INIT ================= */
+(async function init(){
+  await loadProgress();
+  renderAll();
+})();
+</script>
+</body>
+</html>
